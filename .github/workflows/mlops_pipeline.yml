@@ -2,8 +2,8 @@ name: MLOps Automation
 
 on:
   schedule:
-    - cron: "0 * * * *"  # Run every hour
-    - cron: "0 0 * * 0"  # Run weekly
+    - cron: "0 * * * *"  # Runs hourly (Feature Pipeline)
+    - cron: "0 0 * * 0"  # Runs weekly (Model Training)
 
 jobs:
   run_pipeline:
@@ -12,18 +12,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Set Up Python
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.12
+          python-version: 3.9
 
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
       - name: Run Feature Pipeline (Hourly)
-        if: github.event.schedule == '0 * * * *'
-        run: python fetch_aqi.py && python store_features.py
+        if: github.event.schedule == 'cron' && github.event.schedule == '0 * * * *'
+        run: python scripts/fetch_aqi.py && python scripts/store_features.py
 
       - name: Run Training Pipeline (Weekly)
-        if: github.event.schedule == '0 0 * * 0'
-        run: python train_model.py
+        if: github.event.schedule == 'cron' && github.event.schedule == '0 0 * * 0'
+        run: python scripts/train_model.py
