@@ -1,0 +1,29 @@
+name: MLOps Automation
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Run every hour
+    - cron: "0 0 * * 0"  # Run weekly
+
+jobs:
+  run_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set Up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.12
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Feature Pipeline (Hourly)
+        if: github.event.schedule == '0 * * * *'
+        run: python fetch_aqi.py && python store_features.py
+
+      - name: Run Training Pipeline (Weekly)
+        if: github.event.schedule == '0 0 * * 0'
+        run: python train_model.py
