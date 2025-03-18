@@ -33,7 +33,7 @@ joblib.dump(model, "../models/aqi_model.pkl")
 
 # Store Model in Hopsworks
 mr = project.get_model_registry()
-aqi_model = mr.sklearn.create_model(name="AQI_Predictor", metrics={"mae": mae})
+aqi_model = mr.sklearn.create_model(name="AQI_Predictor")
 aqi_model.save("../models/aqi_model.pkl")
 
 print("Model saved in Hopsworks!")
