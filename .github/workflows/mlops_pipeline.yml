@@ -28,21 +28,3 @@ jobs:
       - name: Run Training Pipeline (Weekly)
         if: github.event.schedule == 'cron' && github.event.schedule == '0 0 * * 0'
         run: python scripts/train_model.py
-
-  deploy_streamlit:
-    runs-on: ubuntu-latest
-    needs: run_pipeline  # Ensures pipeline runs first
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run Streamlit App
-        run: streamlit run webapp/app.py --server.port 8501 --server.address 0.0.0.0
